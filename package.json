@@ -1,8 +1,9 @@
 {
   "name": "halloumi-cross-account-parameter-store",
+  "description": "A custom CDK construct to manage a parameter across an AWS account. This construct creates a Lambda-backed custom resource using AWS CloudFormation that handles assuming a role on the target AWS account and puts, updates or deletes a parameter on that account. Role and parameter related variables are passed to the construct and are used by the function to perform these operations.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mohammadjavad.raadi/halloumi-cross-account-parameter-store.git"
+    "url": "https://github.com/sentialabs/halloumi-cross-account-parameter-store.git"
   },
   "scripts": {
     "build": "npx projen build",
@@ -17,6 +18,7 @@
     "package": "npx projen package",
     "package-all": "npx projen package-all",
     "package:js": "npx projen package:js",
+    "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
@@ -30,11 +32,12 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "Mohammadjavad Raadi",
-    "email": "mohammadjavad.raadi@sentia.com",
+    "name": "Sentia MPC",
+    "email": "support.mpc@sentia.com",
     "organization": false
   },
   "devDependencies": {
+    "@types/cfn-response": "^1.0.5",
     "@types/jest": "^27",
     "@types/node": "^14",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -62,6 +65,12 @@
     "aws-cdk-lib": "^2.1.0",
     "constructs": "^10.0.5"
   },
+  "dependencies": {
+    "aws-sdk": "^2.1178.0"
+  },
+  "bundledDependencies": [
+    "aws-sdk"
+  ],
   "keywords": [
     "cdk"
   ],
@@ -112,7 +121,12 @@
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "halloumi-cross-account-parameter-store",
+        "module": "halloumi_cross_account_parameter_store"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"
