@@ -1,6 +1,11 @@
 {
   "dependencies": [
     {
+      "name": "@aws-cdk/assert",
+      "version": "^2.1",
+      "type": "build"
+    },
+    {
       "name": "@types/cfn-response",
       "type": "build"
     },
@@ -35,6 +40,10 @@
       "type": "build"
     },
     {
+      "name": "eslint-config-prettier",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-node",
       "type": "build"
     },
@@ -44,6 +53,10 @@
     },
     {
       "name": "eslint-plugin-import",
+      "type": "build"
+    },
+    {
+      "name": "eslint-plugin-prettier",
       "type": "build"
     },
     {
@@ -84,6 +97,10 @@
     {
       "name": "npm-check-updates",
       "version": "^15",
+      "type": "build"
+    },
+    {
+      "name": "prettier",
       "type": "build"
     },
     {

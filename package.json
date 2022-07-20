@@ -37,6 +37,7 @@
     "organization": false
   },
   "devDependencies": {
+    "@aws-cdk/assert": "^2.1",
     "@types/cfn-response": "^1.0.5",
     "@types/jest": "^27",
     "@types/node": "^14",
@@ -45,9 +46,11 @@
     "aws-cdk-lib": "2.1.0",
     "constructs": "10.0.5",
     "eslint": "^8",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^3.3.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest": "^27",
     "jest-junit": "^13",
     "jsii": "^1.62.0",
@@ -56,6 +59,7 @@
     "jsii-pacmak": "^1.62.0",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^15",
+    "prettier": "^2.7.1",
     "projen": "^0.59.3",
     "standard-version": "^9",
     "ts-jest": "^27",
@@ -131,6 +135,11 @@
       "outDir": "lib",
       "rootDir": "src"
     }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "es5"
   },
   "resolutions": {
     "@types/prettier": "2.6.0"
