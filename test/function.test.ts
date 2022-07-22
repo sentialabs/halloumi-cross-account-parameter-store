@@ -18,34 +18,49 @@ describe('Given we want to create a Lambda-backed custom resource, the Lambda fu
       roleArn: targetAccountRoleArn,
     }
   );
+  // get the logical id of the function service role
+  const roleId = stack.getLogicalId(
+    functionConstruct.functionRole.node.findChild('Resource') as CfnElement
+  );
+
   const template = Template.fromStack(stack);
 
-  it('should have a role that it can assume', () => {
-    template.resourceCountIs('AWS::IAM::Role', 1);
-  });
-
-  it('service role should have sts:AssumeRole action allowed', () => {
+  test('service role should have sts:AssumeRole action allowed', () => {
     template.hasResourceProperties(
       'AWS::IAM::Role',
       lambdaServiceRoleAssumeRolePolicyDocument
     );
   });
 
-  it('service role should have AWSLambdaBasicExecutionRole policy attached', () => {
+  test('service role should have AWSLambdaBasicExecutionRole policy attached', () => {
     template.hasResourceProperties(
       'AWS::IAM::Role',
       lambdaServiceRoleManagedPolicyArns
     );
   });
 
-  it(`service role should have permission to assume ${targetAccountRoleArn} role in the target account`, () => {
-    // get the logical id of the function service role
-    const roleId = stack.getLogicalId(
-      functionConstruct.functionRole.node.findChild('Resource') as CfnElement
-    );
+  test(`service role should have permission to assume ${targetAccountRoleArn} role in the target account`, () => {
     template.hasResourceProperties(
       'AWS::IAM::Policy',
       getLambdaServiceRoleAssumeRoleAttachedPolicy(targetAccountRoleArn, roleId)
     );
+  });
+
+  test(`resource needs to have the service role ${roleId} attached`, () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Role: {
+        'Fn::GetAtt': [roleId, 'Arn'],
+      },
+    });
+  });
+
+  test('resource needs to define environment variables', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: {
+        Variables: {
+          ROLE_ARN: targetAccountRoleArn,
+        },
+      },
+    });
   });
 });

@@ -1,4 +1,7 @@
+import { Duration, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 //#region interfaces
@@ -29,6 +32,10 @@ export class HalloumiCrossAccountParameterStoreFunction extends Construct {
    */
   private readonly scope: Construct;
   /**
+   * The region in which the parent stack is deployed to
+   */
+  private readonly region: string;
+  /**
    * The instance props
    */
   private readonly props: FunctionProps;
@@ -36,12 +43,18 @@ export class HalloumiCrossAccountParameterStoreFunction extends Construct {
    * The IAM Role of the function.
    */
   readonly functionRole: iam.IRole;
+  /**
+   * The Lambda function
+   */
+  readonly _function: lambda.IFunction;
 
   constructor(scope: Construct, id: string, props: FunctionProps) {
     super(scope, id);
     this.scope = scope;
     this.props = props;
+    this.region = Stack.of(this).region;
     this.functionRole = this.createFunctionRole(id);
+    this._function = this.createFunction(id);
   }
 
   private createFunctionRole(id: string): iam.IRole {
@@ -66,5 +79,27 @@ export class HalloumiCrossAccountParameterStoreFunction extends Construct {
       )
     );
     return role;
+  }
+
+  private createFunction(id: string): lambda.IFunction {
+    const { roleArn, roleExternalId, roleSessionName } = this.props;
+
+    const fn = new lambda.Function(this.scope, `${id}Function`, {
+      code: lambda.Code.fromAsset('src/lambdas/cross-account-parameter-store'),
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'main.on_event',
+      timeout: Duration.seconds(900),
+      logRetention: logs.RetentionDays.FIVE_MONTHS,
+      role: this.functionRole,
+      environment: {
+        REGION: this.region,
+        ROLE_ARN: roleArn,
+        ROLE_EXTERNAL_ID: roleExternalId || '',
+        ROLE_SESSION_NAME:
+          roleSessionName || 'halloumi_cross_account_parameter_store',
+      },
+    });
+
+    return fn;
   }
 }
