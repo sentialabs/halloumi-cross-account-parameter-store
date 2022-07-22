@@ -4,7 +4,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
-//#region interfaces
+/** @internal */
 export interface FunctionProps {
   /**
    * The ARN of the role on the target account that the STS client on the Lambda function
@@ -12,21 +12,19 @@ export interface FunctionProps {
    */
   readonly roleArn: string;
   /**
-   * Optional. IAM role session name when STS client on the Lambda function assumes the
-   * role on the target account.
-   * @default halloumi_cross_account_parameter_store
+   * Optional: IAM role session name when STS client on the Lambda function assumes the
+   * role on the target account. Default is `halloumi_cross_account_parameter_store`.
    */
   readonly roleSessionName?: string;
   /**
-   * Optional. Information that you can use in an IAM role trust policy to designate who
+   * Optional: Information that you can use in an IAM role trust policy to designate who
    * can assume the role.
-   * @default undefined
    */
   readonly roleExternalId?: string;
 }
-//#endregion
 
-export class HalloumiCrossAccountParameterStoreFunction extends Construct {
+/** @internal */
+export class FunctionConstruct extends Construct {
   /**
    * The construct scope
    */

@@ -1,6 +1,6 @@
 import { Template } from 'aws-cdk-lib/assertions';
 import { Stack, CfnElement } from 'aws-cdk-lib/core';
-import { HalloumiCrossAccountParameterStoreFunction } from '../src/resources/function';
+import { FunctionConstruct } from '../src/resources/function';
 import {
   lambdaServiceRoleAssumeRoleAttachedPolicy as getLambdaServiceRoleAssumeRoleAttachedPolicy,
   lambdaServiceRoleAssumeRolePolicyDocument,
@@ -11,7 +11,7 @@ describe('Given we want to create a Lambda-backed custom resource, the Lambda fu
   const stack = new Stack();
   const targetAccountRoleArn = 'some-role-arn';
 
-  const functionConstruct = new HalloumiCrossAccountParameterStoreFunction(
+  const functionConstruct = new FunctionConstruct(
     stack,
     'HalloumiCrossAccountParameterStoreFunction',
     {
