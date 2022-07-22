@@ -1,10 +1,4 @@
-import {
-  Role,
-  ServicePrincipal,
-  Effect,
-  PolicyStatement,
-  ManagedPolicy,
-} from 'aws-cdk-lib/aws-iam';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 //#region interfaces
@@ -30,24 +24,26 @@ export interface FunctionProps {
 //#endregion
 
 export class HalloumiCrossAccountParameterStoreFunction extends Construct {
+  functionRole: iam.IRole;
+
   constructor(scope: Construct, id: string, props: FunctionProps) {
     super(scope, id);
 
     const { roleArn } = props;
 
-    const role = new Role(scope, `${id}Role`, {
-      assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+    this.functionRole = new iam.Role(scope, `${id}Role`, {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     });
 
-    role.addToPrincipalPolicy(
-      new PolicyStatement({
+    this.functionRole.addToPrincipalPolicy(
+      new iam.PolicyStatement({
         actions: ['sts:AssumeRole'],
-        effect: Effect.ALLOW,
+        effect: iam.Effect.ALLOW,
         resources: [roleArn],
       })
     );
-    role.addManagedPolicy(
-      ManagedPolicy.fromManagedPolicyName(
+    this.functionRole.addManagedPolicy(
+      iam.ManagedPolicy.fromManagedPolicyName(
         scope,
         `${id}ManagedPolicyName`,
         'service-role/AWSLambdaBasicExecutionRole'
