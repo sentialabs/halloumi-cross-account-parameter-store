@@ -24,30 +24,47 @@ export interface FunctionProps {
 //#endregion
 
 export class HalloumiCrossAccountParameterStoreFunction extends Construct {
-  functionRole: iam.IRole;
+  /**
+   * The construct scope
+   */
+  private readonly scope: Construct;
+  /**
+   * The instance props
+   */
+  private readonly props: FunctionProps;
+  /**
+   * The IAM Role of the function.
+   */
+  readonly functionRole: iam.IRole;
 
   constructor(scope: Construct, id: string, props: FunctionProps) {
     super(scope, id);
+    this.scope = scope;
+    this.props = props;
+    this.functionRole = this.createFunctionRole(id);
+  }
 
-    const { roleArn } = props;
-
-    this.functionRole = new iam.Role(scope, `${id}Role`, {
+  private createFunctionRole(id: string): iam.IRole {
+    const { roleArn } = this.props;
+    const role = new iam.Role(this.scope, `${id}Role`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     });
 
-    this.functionRole.addToPrincipalPolicy(
+    role.addToPrincipalPolicy(
       new iam.PolicyStatement({
         actions: ['sts:AssumeRole'],
         effect: iam.Effect.ALLOW,
         resources: [roleArn],
       })
     );
-    this.functionRole.addManagedPolicy(
+
+    role.addManagedPolicy(
       iam.ManagedPolicy.fromManagedPolicyName(
-        scope,
+        this.scope,
         `${id}ManagedPolicyName`,
         'service-role/AWSLambdaBasicExecutionRole'
       )
     );
+    return role;
   }
 }
