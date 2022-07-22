@@ -4,6 +4,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   authorAddress: 'support.mpc@sentia.com',
   cdkVersion: '2.1.0',
   defaultReleaseBranch: 'main',
+  projenrcTs: true,
   name: 'halloumi-cross-account-parameter-store',
   repositoryUrl:
     'https://github.com/sentialabs/halloumi-cross-account-parameter-store.git',

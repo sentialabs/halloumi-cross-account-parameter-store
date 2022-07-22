@@ -1,17 +1,19 @@
 import { Template } from 'aws-cdk-lib/assertions';
 import { Stack } from 'aws-cdk-lib/core';
-import { HalloumiCrossAccountParameterStore } from '../src';
+import { HalloumiCrossAccountParameterStoreFunction } from '../src/resources/function';
 
 describe('Given we want to create a Lambda-backed custom resource, the Lambda function', () => {
   const stack = new Stack();
-  new HalloumiCrossAccountParameterStore(
+  new HalloumiCrossAccountParameterStoreFunction(
     stack,
-    'HalloumiCrossAccountParameterStoreStack'
+    'HalloumiCrossAccountParameterStoreFunction',
+    {
+      roleArn: 'some-role-arn',
+    }
   );
   const template = Template.fromStack(stack);
 
   it('should have a role that it can assume', () => {
-    // make it pass initially
-    template.resourceCountIs('AWS::IAM::Role', 0);
+    template.resourceCountIs('AWS::IAM::Role', 1);
   });
 });
