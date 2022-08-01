@@ -117,12 +117,24 @@ const customResourceProps: CustomResourceProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterDescription">parameterDescription</a></code> | <code>string</code> | A description for the parameter. |
 | <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterName">parameterName</a></code> | <code>string</code> | The name of the parameter on the target account that is going to be managed. |
 | <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterValue">parameterValue</a></code> | <code>any</code> | The value of the parameter on the target account. |
 | <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.roleArn">roleArn</a></code> | <code>string</code> | The ARN of the role on the target account that the STS client on the Lambda function assumes and has permissions to create, update and delete a parameter on that account. |
-| <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterDescription">parameterDescription</a></code> | <code>string</code> | Optional: A description for the parameter. |
 | <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.roleExternalId">roleExternalId</a></code> | <code>string</code> | Optional: Information that you can use in an IAM role trust policy to designate who can assume the role. |
 | <code><a href="#halloumi-cross-account-parameter-store.CustomResourceProps.property.roleSessionName">roleSessionName</a></code> | <code>string</code> | Optional: IAM role session name when STS client on the Lambda function assumes the role on the target account. |
+
+---
+
+##### `parameterDescription`<sup>Required</sup> <a name="parameterDescription" id="halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterDescription"></a>
+
+```typescript
+public readonly parameterDescription: string;
+```
+
+- *Type:* string
+
+A description for the parameter.
 
 ---
 
@@ -159,19 +171,6 @@ public readonly roleArn: string;
 - *Type:* string
 
 The ARN of the role on the target account that the STS client on the Lambda function assumes and has permissions to create, update and delete a parameter on that account.
-
----
-
-##### `parameterDescription`<sup>Optional</sup> <a name="parameterDescription" id="halloumi-cross-account-parameter-store.CustomResourceProps.property.parameterDescription"></a>
-
-```typescript
-public readonly parameterDescription: string;
-```
-
-- *Type:* string
-- *Default:* undefined
-
-Optional: A description for the parameter.
 
 ---
 
