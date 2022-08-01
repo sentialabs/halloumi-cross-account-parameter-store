@@ -1,4 +1,4 @@
-import { path as appRootPath } from 'app-root-path';
+import * as path from 'path';
 import { Duration, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -64,7 +64,11 @@ export class FunctionConstruct extends Construct {
   constructor(scope: Construct, id: string, props: FunctionProps) {
     super(scope, id);
 
-    const functionCodePath = `${appRootPath}/src/lambdas/cross-account-parameter-store`;
+    const functionCodePath = path.resolve(
+      __dirname,
+      `../lambdas/cross-account-parameter-store`
+    );
+
     this.scope = scope;
     this.props = props;
     this.handler = 'main.on_event';
