@@ -33,6 +33,7 @@ export class HalloumiCrossAccountParameterStore extends Construct {
    * roles and policies
    */
   private readonly functionConstruct: FunctionConstruct;
+
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
     this.props = props;
@@ -40,6 +41,7 @@ export class HalloumiCrossAccountParameterStore extends Construct {
     this.functionConstruct = this.createFunctionConstruct(id);
     this.createCustomResource(id);
   }
+
   private createFunctionConstruct(id: string) {
     const { roleArn, roleExternalId, roleSessionName } = this.props;
     const functionConstruct = new FunctionConstruct(
@@ -57,7 +59,7 @@ export class HalloumiCrossAccountParameterStore extends Construct {
   private createCustomResource(id: string) {
     const { parameterName, parameterValue, parameterDescription } = this.props;
     const provider = new Provider(this.scope, `${id}Provider`, {
-      onEventHandler: this.functionConstruct._function,
+      onEventHandler: this.functionConstruct.getFunction(),
     });
 
     const customResource = new CustomResource(

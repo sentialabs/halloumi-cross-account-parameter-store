@@ -38,26 +38,60 @@ export class FunctionConstruct extends Construct {
    */
   private readonly props: FunctionProps;
   /**
+   * The function code from a local directory.
+   */
+  private readonly functionCode: lambda.AssetCode;
+  /**
+   * The name of the method within your code that Lambda calls to execute your
+   * function.Default is set to `main.on_event`
+   */
+  private readonly handler: string;
+  /**
+   * The runtime environment for the Lambda function that you are uploading.
+   * Default is set to `Runtime.PYTHON_3_8`
+   */
+  private readonly runtime: lambda.Runtime;
+  /**
    * The IAM Role of the function.
    */
-  readonly functionRole: iam.IRole;
+  private readonly functionRole: iam.IRole;
   /**
    * The Lambda function
    */
-  readonly _function: lambda.IFunction;
+  private readonly _function: lambda.IFunction;
 
   constructor(scope: Construct, id: string, props: FunctionProps) {
     super(scope, id);
+
+    const functionCodePath = 'src/lambdas/cross-account-parameter-store';
     this.scope = scope;
     this.props = props;
+    this.handler = 'main.on_event';
     this.region = Stack.of(this).region;
-    this.functionRole = this.createFunctionRole(id);
-    this._function = this.createFunction(id);
+    this.runtime = lambda.Runtime.PYTHON_3_8;
+    this.functionRole = this.createFunctionRole();
+    this.functionCode = this.loadFunctionCode(functionCodePath);
+    this._function = this.createFunction();
   }
 
-  private createFunctionRole(id: string): iam.IRole {
+  /**
+   * Try and load the Lambda function code assets
+   */
+  private loadFunctionCode(path: string): lambda.AssetCode {
+    try {
+      return lambda.Code.fromAsset(path);
+    } catch (error) {
+      console.error('failed to load the function code');
+      throw error;
+    }
+  }
+
+  /**
+   * Create the IAM role and its required policies to attach the the Lambda function
+   */
+  private createFunctionRole(): iam.IRole {
     const { roleArn } = this.props;
-    const role = new iam.Role(this.scope, `${id}Role`, {
+    const role = new iam.Role(this.scope, `FunctionRole`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     });
 
@@ -72,32 +106,55 @@ export class FunctionConstruct extends Construct {
     role.addManagedPolicy(
       iam.ManagedPolicy.fromManagedPolicyName(
         this.scope,
-        `${id}ManagedPolicyName`,
+        `FunctionRoleManagedLambdaPolicy`,
         'service-role/AWSLambdaBasicExecutionRole'
       )
     );
     return role;
   }
 
-  private createFunction(id: string): lambda.IFunction {
+  /**
+   * Create the Lambda function resource
+   */
+  private createFunction(): lambda.IFunction {
+    const {
+      handler,
+      runtime,
+      region,
+      functionCode: code,
+      functionRole: role,
+    } = this;
     const { roleArn, roleExternalId, roleSessionName } = this.props;
 
-    const fn = new lambda.Function(this.scope, `${id}Function`, {
-      code: lambda.Code.fromAsset('src/lambdas/cross-account-parameter-store'),
-      runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'main.on_event',
-      timeout: Duration.seconds(900),
-      logRetention: logs.RetentionDays.FIVE_MONTHS,
-      role: this.functionRole,
+    const fn = new lambda.Function(this.scope, `LambdaFunction`, {
+      code,
+      role,
+      handler,
+      runtime,
       environment: {
-        REGION: this.region,
+        REGION: region,
         ROLE_ARN: roleArn,
         ROLE_EXTERNAL_ID: roleExternalId || '',
         ROLE_SESSION_NAME:
           roleSessionName || 'halloumi_cross_account_parameter_store',
       },
+      timeout: Duration.seconds(900),
+      logRetention: logs.RetentionDays.FIVE_MONTHS,
     });
 
     return fn;
+  }
+
+  /**
+   * Get the IAM Role attached to the function
+   */
+  public getFunctionRole(): iam.IRole {
+    return this.functionRole;
+  }
+  /**
+   * Get the function
+   */
+  public getFunction(): lambda.IFunction {
+    return this._function;
   }
 }

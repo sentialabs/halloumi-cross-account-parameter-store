@@ -20,7 +20,7 @@ describe('Given we want to create a Lambda-backed custom resource, the Lambda fu
   );
   // get the logical id of the function service role
   const roleId = stack.getLogicalId(
-    functionConstruct.functionRole.node.findChild('Resource') as CfnElement
+    functionConstruct.getFunctionRole().node.findChild('Resource') as CfnElement
   );
 
   const template = Template.fromStack(stack);
@@ -61,6 +61,13 @@ describe('Given we want to create a Lambda-backed custom resource, the Lambda fu
           ROLE_ARN: targetAccountRoleArn,
         },
       },
+    });
+  });
+
+  test('resource needs to define runtime and handler properties', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Runtime: 'python3.8',
+      Handler: 'main.on_event',
     });
   });
 });
