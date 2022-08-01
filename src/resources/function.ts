@@ -65,7 +65,6 @@ export class FunctionConstruct extends Construct {
     super(scope, id);
 
     const functionCodePath = `${appRootPath}/src/lambdas/cross-account-parameter-store`;
-    console.log(functionCodePath);
     this.scope = scope;
     this.props = props;
     this.handler = 'main.on_event';
