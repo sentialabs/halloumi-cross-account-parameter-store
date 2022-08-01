@@ -66,7 +66,7 @@ export class FunctionConstruct extends Construct {
 
     const functionCodePath = path.resolve(
       __dirname,
-      `../lambdas/cross-account-parameter-store`
+      `../lambdas/cross-account-parameter-store.zip`
     );
 
     this.scope = scope;
