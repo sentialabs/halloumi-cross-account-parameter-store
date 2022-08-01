@@ -7,8 +7,9 @@ describe('Given we want to create a Lambda-backed custom resource, the CloudForm
   const targetAccountRoleArn = 'some-role-arn';
   const targetAccountAssumeRoleExternalId = 'some-external-id';
   const targetAccountAssumeRoleSessionName = 'some-session-name';
-  const parameterName = 'some/parameter/name';
   const parameterValue = 'some-value';
+  const parameterName = '/some/parameter/name';
+  const parameterDescription = 'some-description';
 
   new HalloumiCrossAccountParameterStore(
     stack,
@@ -16,6 +17,7 @@ describe('Given we want to create a Lambda-backed custom resource, the CloudForm
     {
       parameterName,
       parameterValue,
+      parameterDescription,
       roleArn: targetAccountRoleArn,
       roleExternalId: targetAccountAssumeRoleExternalId,
       roleSessionName: targetAccountAssumeRoleSessionName,
@@ -28,6 +30,7 @@ describe('Given we want to create a Lambda-backed custom resource, the CloudForm
     template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
       PARAMETER_NAME: parameterName,
       PARAMETER_VALUE: parameterValue,
+      PARAMETER_DESCRIPTION: parameterDescription,
     });
   });
 

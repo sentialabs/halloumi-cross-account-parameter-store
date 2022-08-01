@@ -16,6 +16,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   //   distName: 'halloumi-cross-account-parameter-store',
   //   module: 'halloumi_cross_account_parameter_store',
   // },
+  gitignore: ['.DS_Store'],
 });
 
 project.package.addField('prettier', {
@@ -31,6 +32,8 @@ project.eslint?.addRules({
   ],
 });
 
+// This task copies the lambda function source code to the output/bundle directory so that the
+// source code is available when the library is installed.
 project.compileTask.exec('cp -r src/lambdas lib/lambdas');
 
 project.synth();

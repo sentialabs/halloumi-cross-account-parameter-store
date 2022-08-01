@@ -13,10 +13,9 @@ export interface CustomResourceProps extends FunctionProps {
    */
   readonly parameterValue: unknown;
   /**
-   * Optional: A description for the parameter.
-   * @default undefined
+   * A description for the parameter.
    */
-  readonly parameterDescription?: string;
+  readonly parameterDescription: string;
 }
 
 export class HalloumiCrossAccountParameterStore extends Construct {
