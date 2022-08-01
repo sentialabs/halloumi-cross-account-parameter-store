@@ -74,9 +74,9 @@ export class FunctionConstruct extends Construct {
     this.handler = 'main.on_event';
     this.region = Stack.of(this).region;
     this.runtime = lambda.Runtime.PYTHON_3_8;
-    this.functionRole = this.createFunctionRole();
+    this.functionRole = this.createFunctionRole(id);
     this.functionCode = this.loadFunctionCode(functionCodePath);
-    this._function = this.createFunction();
+    this._function = this.createFunction(id);
   }
 
   /**
@@ -94,9 +94,9 @@ export class FunctionConstruct extends Construct {
   /**
    * Create the IAM role and its required policies to attach the the Lambda function
    */
-  private createFunctionRole(): iam.IRole {
+  private createFunctionRole(id: string): iam.IRole {
     const { roleArn } = this.props;
-    const role = new iam.Role(this.scope, `FunctionRole`, {
+    const role = new iam.Role(this.scope, `${id}FunctionRole`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     });
 
@@ -119,7 +119,7 @@ export class FunctionConstruct extends Construct {
   /**
    * Create the Lambda function resource
    */
-  private createFunction(): lambda.IFunction {
+  private createFunction(id: string): lambda.IFunction {
     const {
       handler,
       runtime,
@@ -129,7 +129,7 @@ export class FunctionConstruct extends Construct {
     } = this;
     const { roleArn, roleExternalId, roleSessionName } = this.props;
 
-    const fn = new lambda.Function(this.scope, `LambdaFunction`, {
+    const fn = new lambda.Function(this.scope, `${id}LambdaFunction`, {
       code,
       role,
       handler,
