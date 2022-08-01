@@ -109,9 +109,7 @@ export class FunctionConstruct extends Construct {
     );
 
     role.addManagedPolicy(
-      iam.ManagedPolicy.fromManagedPolicyName(
-        this.scope,
-        `FunctionRoleManagedLambdaPolicy`,
+      iam.ManagedPolicy.fromAwsManagedPolicyName(
         'service-role/AWSLambdaBasicExecutionRole'
       )
     );

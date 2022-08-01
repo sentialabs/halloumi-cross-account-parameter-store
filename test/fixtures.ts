@@ -23,11 +23,7 @@ export const lambdaServiceRoleManagedPolicyArns = {
           {
             Ref: 'AWS::Partition',
           },
-          ':iam::',
-          {
-            Ref: 'AWS::AccountId',
-          },
-          ':policy/service-role/AWSLambdaBasicExecutionRole',
+          ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
         ],
       ],
     },
