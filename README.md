@@ -14,7 +14,7 @@ export class SomeStack extends cdk.Stack {
     new HalloumiCrossAccountParameterStore(scope, 'MyCrossAccountParameter1', {
       parameterName: 'some/parameter/name',
       parameterValue: 'some-value',
-      roleArn: 'arn:aws:iam::123456789012:root',
+      roleArn: 'arn:aws:iam::123412341234:role/role-name',
       roleExternalId: '',
       roleSessionName: '',
     });
