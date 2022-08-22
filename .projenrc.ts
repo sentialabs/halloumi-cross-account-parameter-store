@@ -2,7 +2,7 @@ import { awscdk } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Sentia MPC',
   authorAddress: 'support.mpc@sentia.com',
-  cdkVersion: '2.1.0',
+  cdkVersion: '2.37.1',
   defaultReleaseBranch: 'main',
   projenrcTs: true,
   name: 'halloumi-cross-account-parameter-store',
