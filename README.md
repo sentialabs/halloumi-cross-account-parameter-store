@@ -7,32 +7,43 @@ A custom CDK construct to manage a parameter across an AWS account. This constru
 ```typescript
 import { App, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { HalloumiCrossAccountParameterStore } from 'halloumi-cross-account-parameter-store';
+import {
+  HalloumiCrossAccountParameterStore,
+  CustomResourceProvider,
+} from 'halloumi-cross-account-parameter-store';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    new HalloumiCrossAccountParameterStore(this, 'MyCrossAccountParameter1', {
+    const provider = new CustomResourceProvider(
+      this,
+      'CrossAccountParameterStoreCustomResourceProvider',
+      {
+        roleArn: 'arn:aws:iam::123412341234:role/role-name',
+        roleExternalId: '',
+        roleSessionName: '',
+      }
+    );
+
+    new HalloumiCrossAccountParameterStore(this, 'Parameter1', {
+      customResourceProvider: provider,
       parameterName: '/some/parameter/name',
       parameterValue: 'some-value',
       parameterDescription: 'my-description',
-      roleArn: 'arn:aws:iam::123412341234:role/role-name',
-      roleExternalId: '',
-      roleSessionName: '',
     });
 
-    new HalloumiCrossAccountParameterStore(this, 'MyCrossAccountParameter2', {
+    new HalloumiCrossAccountParameterStore(this, 'Parameter2', {
+      customResourceProvider: provider,
       parameterName: '/some/parameter/name2',
       parameterValue: 'some-value-2',
       parameterDescription: 'my-description',
-      roleArn: 'arn:aws:iam::123412341234:role/role-name',
-      roleExternalId: '',
-      roleSessionName: '',
     });
   }
 }
 ```
+
+**Note: You only need to define the `CustomResourceProvider` once and pass it to the `HalloumiCrossAccountParameterStore` constructor of your new instance. If you need to assume different roles, create a new instance of the `CustomResourceProvider` and use it accordingly.**
 
 ## Setting Up Trust Relationship and the Permissions
 

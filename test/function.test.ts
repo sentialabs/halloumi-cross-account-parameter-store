@@ -8,22 +8,29 @@ import {
 } from './fixtures';
 
 describe('Given we want to create a Lambda-backed custom resource, the Lambda function', () => {
-  const stack = new Stack();
+  let stack: Stack;
+  let template: Template;
+  let roleId: string;
   const targetAccountRoleArn = 'some-role-arn';
 
-  const functionConstruct = new FunctionConstruct(
-    stack,
-    'HalloumiCrossAccountParameterStoreFunction',
-    {
-      roleArn: targetAccountRoleArn,
-    }
-  );
-  // get the logical id of the function service role
-  const roleId = stack.getLogicalId(
-    functionConstruct.getFunctionRole().node.findChild('Resource') as CfnElement
-  );
+  beforeAll(() => {
+    // GIVEN
+    stack = new Stack();
 
-  const template = Template.fromStack(stack);
+    // WHEN
+    const functionConstruct = new FunctionConstruct(
+      stack,
+      'HalloumiCrossAccountParameterStoreFunction',
+      {
+        roleArn: targetAccountRoleArn,
+      }
+    );
+    // get the logical id of the function service role
+    roleId = stack.getLogicalId(
+      functionConstruct.gFunctionRole().node.findChild('Resource') as CfnElement
+    );
+    template = Template.fromStack(stack);
+  });
 
   test('service role should have sts:AssumeRole action allowed', () => {
     template.hasResourceProperties(
@@ -46,7 +53,7 @@ describe('Given we want to create a Lambda-backed custom resource, the Lambda fu
     );
   });
 
-  test(`resource needs to have the service role ${roleId} attached`, () => {
+  test(`resource needs to have the service role with proper permissions attached`, () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Role: {
         'Fn::GetAtt': [roleId, 'Arn'],

@@ -5,7 +5,6 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
-/** @internal */
 export interface FunctionProps {
   /**
    * The ARN of the role on the target account that the STS client on the Lambda function
@@ -24,7 +23,6 @@ export interface FunctionProps {
   readonly roleExternalId?: string;
 }
 
-/** @internal */
 export class FunctionConstruct extends Construct {
   /**
    * The construct scope
@@ -151,13 +149,13 @@ export class FunctionConstruct extends Construct {
   /**
    * Get the IAM Role attached to the function
    */
-  public getFunctionRole(): iam.IRole {
+  public gFunctionRole(): iam.IRole {
     return this.functionRole;
   }
   /**
    * Get the function
    */
-  public getFunction(): lambda.IFunction {
+  public gFunction(): lambda.IFunction {
     return this._function;
   }
 }

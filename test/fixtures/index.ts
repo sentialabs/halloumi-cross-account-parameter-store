@@ -1,3 +1,27 @@
+export const targetRole1Props = {
+  arn: 'some-role-arn',
+  externalId: 'some-external-id',
+  sessionName: 'some-session-name',
+};
+
+export const targetRole2Props = {
+  arn: 'some-role-arn-2',
+  externalId: 'some-external-id-2',
+  sessionName: 'some-session-name-2',
+};
+
+export const param1 = {
+  name: '/name/of/parameter1',
+  value: 'value-of-parameter1',
+  description: 'description-of-parameter1',
+};
+
+export const param2 = {
+  name: '/name/of/parameter2',
+  value: 'value-of-parameter2',
+  description: 'description-of-parameter2',
+};
+
 export const lambdaServiceRoleAssumeRolePolicyDocument = {
   AssumeRolePolicyDocument: {
     Statement: [
