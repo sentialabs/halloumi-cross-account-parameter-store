@@ -13,7 +13,7 @@ export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    new HalloumiCrossAccountParameterStore(scope, 'MyCrossAccountParameter1', {
+    new HalloumiCrossAccountParameterStore(this, 'MyCrossAccountParameter1', {
       parameterName: '/some/parameter/name',
       parameterValue: 'some-value',
       parameterDescription: 'my-description',
