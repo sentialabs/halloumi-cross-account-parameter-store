@@ -18,6 +18,7 @@
     "package": "npx projen package",
     "package-all": "npx projen package-all",
     "package:js": "npx projen package:js",
+    "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
@@ -117,7 +118,12 @@
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "halloumi-cross-account-parameter-store",
+        "module": "halloumi_cross_account_parameter_store"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"
