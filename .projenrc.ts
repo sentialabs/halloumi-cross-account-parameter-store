@@ -1,6 +1,7 @@
 import { awscdk } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Sentia MPC',
+  majorVersion: 1,
   authorAddress: 'support.mpc@sentia.com',
   cdkVersion: '2.37.1',
   defaultReleaseBranch: 'main',
