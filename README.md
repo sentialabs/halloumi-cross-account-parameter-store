@@ -4,6 +4,8 @@ A custom CDK construct to manage a parameter across an AWS account. This constru
 
 ## Usage
 
+### TypeScript
+
 ```typescript
 import { App, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
@@ -41,6 +43,48 @@ export class MyStack extends Stack {
     });
   }
 }
+```
+
+### Python
+
+```python
+from aws_cdk import (
+    Stack,
+)
+from halloumi_cross_account_parameter_store import (
+    CustomResourceProvider,
+    HalloumiCrossAccountParameterStore,
+)
+from constructs import Construct
+
+class MyStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
+
+        provider = CustomResourceProvider(
+            self,
+            "CrossAccountParameterStoreCustomResourceProvider",
+            role_arn="arn:aws:iam::123412341234:role/role-name",
+            role_external_id="",
+            role_session_name="",
+        )
+
+        HalloumiCrossAccountParameterStore(
+            self,
+            "Parameter1",
+            custom_resource_provider=provider,
+            parameter_name="/some/parameter/name",
+            parameter_value="some-value",
+            parameter_description="my-description",
+        )
+        HalloumiCrossAccountParameterStore(
+            self,
+            "Parameter2",
+            custom_resource_provider=provider,
+            parameter_name="/some/parameter/name2",
+            parameter_value="some-value",
+            parameter_description="my-description",
+        )
 ```
 
 **Note: You only need to define the `CustomResourceProvider` once and pass it to the `HalloumiCrossAccountParameterStore` constructor of your new instance. If you need to assume different roles, create a new instance of the `CustomResourceProvider` and use it accordingly.**
